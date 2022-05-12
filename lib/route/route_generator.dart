@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:tutor_raya_mobile/UI/screens/main_screen.dart';
 import 'package:tutor_raya_mobile/UI/screens/splash_screen.dart';
 import 'package:tutor_raya_mobile/UI/screens/testing_screen.dart';
+import 'package:tutor_raya_mobile/main.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -11,9 +12,9 @@ class RouteGenerator {
     final args = settings.arguments;
     switch (settings.name) {
       case '/':
-        return MaterialPageRoute(builder: (_) => const SplashScreen());
-      case '/main-screen':
-        return MaterialPageRoute(builder: (_) => MainScreen());
+        return MaterialPageRoute(builder: (_) => RouterAuth());
+      // case '/main-screen':
+      //   return MaterialPageRoute(builder: (_) => MainScreen());
       default:
         // If there is no such named route in the switch statement, e.g. /third
         return _errorRoute();

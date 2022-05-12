@@ -1,21 +1,24 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tutor_raya_mobile/UI/screens/main_screen.dart';
-import 'package:tutor_raya_mobile/UI/screens/testing_screen.dart';
+import 'package:provider/provider.dart';
 import 'package:tutor_raya_mobile/UI/widgets/category_card.dart';
 import 'package:tutor_raya_mobile/UI/widgets/tutor_card.dart';
+import 'package:tutor_raya_mobile/models/category.dart';
+import 'package:tutor_raya_mobile/models/tutor.dart';
+import 'package:tutor_raya_mobile/providers/auth.dart';
+import 'package:tutor_raya_mobile/providers/category.dart';
+import 'package:tutor_raya_mobile/providers/tutor.dart';
 import 'package:tutor_raya_mobile/styles/color_constants.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tutor_raya_mobile/styles/style_constants.dart';
-import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import 'package:tutor_raya_mobile/utils/constants.dart';
 
-class HomeScreen extends ConsumerWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
+    final user = Provider.of<AuthProvider>(context, listen: false).user;
     return Scaffold(
       // backgroundColor: kBasicBackgroundColor,
       body: SafeArea(
@@ -49,15 +52,21 @@ class HomeScreen extends ConsumerWidget {
                           Expanded(
                             flex: 2,
                             child: Text(
-                              'Hello, Ilham',
+                              'Hello, ${user?.name}',
                               style: kTitleBoldTextStyle,
                             ),
                           ),
                           Expanded(
                             child: CircleAvatar(
                               radius: 30,
-                              backgroundImage: NetworkImage(
-                                  "https://i.pinimg.com/236x/c9/9a/5e/c99a5e7846dd69c9de812983942e346f.jpg"),
+                              backgroundImage: user?.picture != null
+                                  ? NetworkImage(
+                                      "$API_STORAGE${user?.picture!}")
+                                  : AssetImage(
+                                          "assets/images/blank-profile.png")
+                                      as ImageProvider,
+
+                              // backgroundImage: NetworkImage(user!.picture!),
                               backgroundColor: Colors.transparent,
                             ),
                           ),
@@ -93,20 +102,26 @@ class HomeScreen extends ConsumerWidget {
                     ),
                     SizedBox(
                       height: 120,
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        shrinkWrap: true,
-                        padding: const EdgeInsets.all(8),
-                        children: <Widget>[
-                          CategoryCard(
-                              name: 'Technology',
-                              onTap: () {
-                                print('hi');
-                              }),
-                          CategoryCard(name: 'Maths', onTap: () {}),
-                          CategoryCard(name: 'Technology', onTap: () {}),
-                          CategoryCard(name: 'Technology', onTap: () {}),
-                        ],
+                      child: Consumer<CategoryProvider>(
+                        builder: (context, category, _) => FutureBuilder(
+                            future: category.getCategories(),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                var data = snapshot.data as List<Category>;
+                                return ListView(
+                                  scrollDirection: Axis.horizontal,
+                                  shrinkWrap: true,
+                                  padding: const EdgeInsets.all(8),
+                                  children: data
+                                      .map<Widget>((category) =>
+                                          CategoryCard(category: category))
+                                      .toList(),
+                                );
+                              }
+                              return Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }),
                       ),
                     ),
                     Row(
@@ -121,7 +136,9 @@ class HomeScreen extends ConsumerWidget {
                         ),
                         GestureDetector(
                           onTap: () {
-                            print('hi');
+                            final user = Provider.of<TutorProvider>(context,
+                                    listen: false)
+                                .getTutors(5);
                           },
                           child: Text(
                             'See All',
@@ -135,15 +152,27 @@ class HomeScreen extends ConsumerWidget {
                     ),
                     SizedBox(
                       height: 220,
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        shrinkWrap: true,
-                        padding: const EdgeInsets.all(8),
-                        children: <Widget>[
-                          TutorCard(),
-                          TutorCard(),
-                          TutorCard(),
-                        ],
+                      child: Consumer<TutorProvider>(
+                        builder: (context, tutor, _) => FutureBuilder(
+                            future: tutor.getTutors(5),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                var data = snapshot.data as List<Tutor>;
+
+                                return ListView(
+                                  scrollDirection: Axis.horizontal,
+                                  shrinkWrap: true,
+                                  padding: const EdgeInsets.all(8),
+                                  children: data
+                                      .map<Widget>(
+                                          (tutor) => TutorCard(tutor: tutor))
+                                      .toList(),
+                                );
+                              }
+                              return Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }),
                       ),
                     )
                   ],

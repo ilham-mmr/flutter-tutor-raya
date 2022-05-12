@@ -1,17 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:provider/provider.dart';
 import 'package:tutor_raya_mobile/UI/screens/main_screen.dart';
 import 'package:tutor_raya_mobile/UI/screens/testing_screen.dart';
+import 'package:tutor_raya_mobile/providers/auth.dart';
+import 'package:tutor_raya_mobile/services/google_signin_api.dart';
 import 'package:tutor_raya_mobile/styles/color_constants.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tutor_raya_mobile/styles/style_constants.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
-class SplashScreen extends ConsumerWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       // backgroundColor: kBasicBackgroundColor,
       body: SafeArea(
@@ -56,7 +63,7 @@ class SplashScreen extends ConsumerWidget {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: ElevatedButton.icon(
-                      onPressed: () {},
+                      onPressed: signIn,
                       label: const Text(
                         'Continue with google',
                         style: TextStyle(fontSize: 20),
@@ -91,5 +98,15 @@ class SplashScreen extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  Future signIn() async {
+    bool isLoggedIn =
+        await Provider.of<AuthProvider>(context, listen: false).login();
+    String message = "Login Failed";
+    if (isLoggedIn) {
+      message = "Login Successful";
+    }
+    print(message);
   }
 }

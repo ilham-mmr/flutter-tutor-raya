@@ -1,15 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:tutor_raya_mobile/UI/screens/favorited_screen.dart';
 import 'package:tutor_raya_mobile/UI/screens/home_screen.dart';
 import 'package:tutor_raya_mobile/UI/screens/profile_screen.dart';
 import 'package:tutor_raya_mobile/UI/screens/search_screen.dart';
-import 'package:tutor_raya_mobile/UI/screens/splash_screen.dart';
 import 'package:tutor_raya_mobile/styles/color_constants.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:tutor_raya_mobile/styles/style_constants.dart';
 
 class MainScreen extends StatelessWidget {
   MainScreen({Key? key}) : super(key: key);
@@ -52,9 +49,9 @@ class MainScreen extends StatelessWidget {
       ),
       navBarStyle:
           NavBarStyle.style3, // Choose the nav bar style with this property.
-      onWillPop: (_) async {
-        return false;
-      },
+      // onWillPop: (_) async {
+      //   return false;
+      // },
     );
   }
 

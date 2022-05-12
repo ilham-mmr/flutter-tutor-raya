@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:tutor_raya_mobile/UI/screens/splash_screen.dart';
 import 'package:tutor_raya_mobile/styles/color_constants.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tutor_raya_mobile/styles/style_constants.dart';
 
-class TestingScreen extends ConsumerWidget {
+class TestingScreen extends StatelessWidget {
   const TestingScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('hi')),
       // backgroundColor: kBasicBackgroundColor,

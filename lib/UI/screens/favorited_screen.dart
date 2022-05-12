@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tutor_raya_mobile/UI/widgets/favorite_card.dart';
 import 'package:tutor_raya_mobile/styles/color_constants.dart';
 import 'package:tutor_raya_mobile/styles/style_constants.dart';
 
-class FavoritedScreen extends ConsumerWidget {
+class FavoritedScreen extends StatelessWidget {
   const FavoritedScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
       // backgroundColor: kBasicBackgroundColor,

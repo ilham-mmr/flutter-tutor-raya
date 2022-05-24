@@ -104,8 +104,12 @@ class _TutorCardState extends State<TutorCard> {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                        children: [...?tutor.categories?.map((e) => Text(e))]),
+                    child: Row(children: [
+                      ...?tutor.categories?.map((e) => Padding(
+                            padding: const EdgeInsets.all(6.0),
+                            child: Text(e),
+                          ))
+                    ]),
                   ),
                 ],
               ),

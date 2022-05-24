@@ -45,7 +45,7 @@ class TutorService {
     if (id == null) {
       return;
     }
-    String url = API_ROOT + "/tutors/12" + "?with_tutorings=yes";
+    String url = API_ROOT + "/tutors/$id" + "?with_tutorings=yes";
     // String url = API_ROOT + "/tutors/" + id.toString() + "?with_tutorings=yes";
 
     final response = await http.get(
@@ -58,23 +58,24 @@ class TutorService {
 
     if (response.statusCode == 200) {
       Map<String, dynamic> data = jsonDecode(response.body);
-      List tutoringsData = data["tutorings"];
-      // print(tutoringsData);
-      tutoringsData.forEach((element) {
-        print(element["title"]);
-      });
+      // print(data);
+      // var tutoringsData = data["tutorings"];
+      // tutoringsData.forEach((element) {
+      //   print(element["title"]);
+      // });
       Tutor tutor = Tutor.fromJson(data);
-      // var tutorings = tutoringsData
-      //     .map<Tutoring>((item) => Tutoring.fromJson(item))
-      //     .toList();
-
+      var tutorings = data["tutorings"]
+          .map<Tutoring>((item) => Tutoring.fromJson(item))
+          .toList();
       // print(tutorings);
+      tutor.tutorings = tutorings;
 
       // print(tutoringsData);
       // tutoringsData.forEach((element) {
       //   print(element);
       // });
-      return data;
+      return tutor;
     }
+    return Future.error('No data');
   }
 }

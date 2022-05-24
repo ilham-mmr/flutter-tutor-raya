@@ -21,4 +21,17 @@ class TutorProvider with ChangeNotifier {
     var data = await tutorService.getTutorDetail(id);
     return data;
   }
+
+  /*
+   whenever wa want to get data from the search and home screen for tutor cards.
+   we check against the retrieved data and favoritedData['id']
+   if it's null then make it false, if it's favorited then make it true
+   
+   */
+
+  // toggleFavorite(int userId, tutorId) {
+  // call tutorService.togglefavorite(userId, tutorId);
+  // make product model have withchangenotifier
+  // add the relevant method?
+  // }
 }

@@ -4,9 +4,12 @@ import 'package:provider/provider.dart';
 import 'package:tutor_raya_mobile/UI/screens/booking_screen.dart';
 import 'package:tutor_raya_mobile/UI/widgets/category_card.dart';
 import 'package:tutor_raya_mobile/models/category.dart';
+import 'package:tutor_raya_mobile/models/tutor.dart';
+import 'package:tutor_raya_mobile/models/tutoring.dart';
 import 'package:tutor_raya_mobile/providers/tutor.dart';
 import 'package:tutor_raya_mobile/styles/color_constants.dart';
 import 'package:tutor_raya_mobile/styles/style_constants.dart';
+import 'package:tutor_raya_mobile/utils/constants.dart';
 
 class DetailScreen extends StatefulWidget {
   const DetailScreen({required this.tutorId, Key? key}) : super(key: key);
@@ -33,9 +36,16 @@ class _DetailScreenState extends State<DetailScreen> {
           builder: (context, tutor, _) => FutureBuilder(
             future: tutor.getTutorDetail(widget.tutorId),
             builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return Center(
+                  child: Text("Sorry the tutor can't be found",
+                      style: kTitleBoldTextStyle),
+                );
+              }
               if (snapshot.hasData) {
-                // print(snapshot.data);
-                return _buildDetailSection(height, width, context);
+                var retrievedTutor = snapshot.data as Tutor;
+                return _buildDetailSection(
+                    height, width, retrievedTutor, context);
               }
               return const Center(
                 child: CircularProgressIndicator(),
@@ -47,11 +57,18 @@ class _DetailScreenState extends State<DetailScreen> {
     );
   }
 
-  Stack _buildDetailSection(double height, double width, BuildContext context) {
+  Widget _buildDetailSection(
+      double height, double width, Tutor? tutor, BuildContext context) {
+    if (tutor == null) {
+      return Center(
+        child:
+            Text("Sorry the tutor can't be found", style: kTitleBoldTextStyle),
+      );
+    }
     return Stack(
       children: [
         Image.network(
-          "https://image.shutterstock.com/image-photo/close-portrait-smiling-handsome-man-260nw-1011569245.jpg",
+          "$API_STORAGE${tutor.picture!}",
           width: double.infinity,
           fit: BoxFit.cover,
         ),
@@ -72,7 +89,7 @@ class _DetailScreenState extends State<DetailScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Kuretakeso Hott',
+                      tutor.name!,
                       style: TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
@@ -82,7 +99,7 @@ class _DetailScreenState extends State<DetailScreen> {
                     const SizedBox(
                       height: 20,
                     ),
-                    index == 0 ? _buildProfile() : _buildTutorings()
+                    index == 0 ? _buildProfile(tutor) : _buildTutorings(tutor)
                   ],
                 ),
               ),
@@ -124,7 +141,7 @@ class _DetailScreenState extends State<DetailScreen> {
     );
   }
 
-  SizedBox _buildProfile() {
+  SizedBox _buildProfile(Tutor? tutor) {
     return SizedBox(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -136,22 +153,14 @@ class _DetailScreenState extends State<DetailScreen> {
           SizedBox(
             height: 100,
             child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: [
-                CategoryCard(
-                  category: Category(id: 1, name: "Science"),
-                  tappable: false,
-                ),
-                CategoryCard(
-                  category: Category(id: 1, name: "Social Science"),
-                  tappable: false,
-                ),
-                CategoryCard(
-                  category: Category(id: 1, name: "Language"),
-                  tappable: false,
-                ),
-              ],
-            ),
+                scrollDirection: Axis.horizontal,
+                children: tutor!.categories!
+                    .map<CategoryCard>((e) => CategoryCard(
+                        category: Category(
+                          name: e,
+                        ),
+                        tappable: false))
+                    .toList()),
           ),
           Text(
             'Teaches',
@@ -160,16 +169,16 @@ class _DetailScreenState extends State<DetailScreen> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
-              children: [
-                const Padding(
-                  padding: EdgeInsets.only(right: 16),
-                  child: Text('Physics'),
-                ),
-                const Padding(
-                  padding: EdgeInsets.only(right: 16),
-                  child: Text('maths'),
-                ),
-              ],
+              children: tutor.subjects == null
+                  ? []
+                  : tutor.subjects!
+                      .map<Widget>(
+                        (e) => Padding(
+                          padding: const EdgeInsets.only(right: 16),
+                          child: Text(e.toString()),
+                        ),
+                      )
+                      .toList(),
             ),
           ),
           Text(
@@ -179,9 +188,7 @@ class _DetailScreenState extends State<DetailScreen> {
           const SizedBox(
             height: 5,
           ),
-          const Text(
-            'ed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, qu',
-          ),
+          Text(tutor.about ?? "No description"),
           const SizedBox(
             height: 10,
           ),
@@ -192,12 +199,12 @@ class _DetailScreenState extends State<DetailScreen> {
           const SizedBox(
             height: 5,
           ),
-          const Text(
-            'Universiti Utara Malaysia',
-            style: TextStyle(fontWeight: FontWeight.bold),
+          Text(
+            tutor.education ?? "No description",
+            style: const TextStyle(fontWeight: FontWeight.bold),
           ),
-          const Text(
-            'Bachelor of Science with Honors Information Technology (Software Engineering)',
+          Text(
+            tutor.degree ?? "No description",
           ),
           const SizedBox(
             height: 10,
@@ -232,7 +239,14 @@ class _DetailScreenState extends State<DetailScreen> {
     );
   }
 
-  _buildTutorings() {
+  _buildTutorings(Tutor? tutor) {
+    if (tutor?.tutorings == null) {
+      return Center(
+        child: Text("Sorry there are no tutoring sessions available",
+            style: kTitleBoldTextStyle),
+      );
+    }
+    var tutorings = tutor?.tutorings ?? [];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -266,10 +280,12 @@ class _DetailScreenState extends State<DetailScreen> {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
-                children: [
-                  TutoringExpansionTile(context: context),
-                  TutoringExpansionTile(context: context),
-                ],
+                children: tutorings
+                    .map<Widget>(
+                      (tutoring) => TutoringExpansionTile(
+                          context: context, tutoring: tutoring),
+                    )
+                    .toList(),
               ),
             ),
           ),
@@ -283,9 +299,11 @@ class TutoringExpansionTile extends StatelessWidget {
   const TutoringExpansionTile({
     Key? key,
     required this.context,
+    required this.tutoring,
   }) : super(key: key);
 
   final BuildContext context;
+  final Tutoring tutoring;
 
   @override
   Widget build(BuildContext context) {
@@ -303,23 +321,18 @@ class TutoringExpansionTile extends StatelessWidget {
           dividerColor: Colors.transparent, // if you want to remove the border
         ),
         child: ExpansionTile(
-          // backgroundColor: kOrangeBackgroundColor,
-          // collapsedBackgroundColor: kOrangeBackgroundColor,
-          // textColor: Colors.black,
-          // collapsedTextColor: Colors.black,
-          // collapsedIconColor: Colors.black,
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                "Learn Maths With Fun | Maths",
-                style: TextStyle(
+              Text(
+                tutoring.title!,
+                style: const TextStyle(
                     fontSize: 18.0,
                     color: Colors.white,
                     fontWeight: FontWeight.bold),
               ),
-              const Text(
-                "Friday, 24rd June 2021 10:00 - 11:00",
+              Text(
+                tutoring.getFormmatedDatetime(),
                 style: const TextStyle(
                     fontSize: 14.0,
                     color: Colors.white,
@@ -341,10 +354,10 @@ class TutoringExpansionTile extends StatelessWidget {
                     fontWeight: FontWeight.bold),
               ),
               children: <Widget>[
-                const ListTile(
-                  title: const Text(
-                    " ed ut perspiciatis unde omnis iste natus error sit vo qu",
-                    style: TextStyle(
+                ListTile(
+                  title: Text(
+                    tutoring.description!,
+                    style: const TextStyle(
                       fontSize: 18.0,
                       color: Colors.white,
                     ),
@@ -357,8 +370,8 @@ class TutoringExpansionTile extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Total Price : RM120",
-                    style: TextStyle(
+                    "Total Price : RP${tutoring.totalPrice}",
+                    style: const TextStyle(
                         fontSize: 18.0,
                         color: Colors.white,
                         fontWeight: FontWeight.bold),
@@ -372,7 +385,7 @@ class TutoringExpansionTile extends StatelessWidget {
                     onPressed: () {
                       pushNewScreen(
                         context,
-                        screen: BookingScreen(),
+                        screen: const BookingScreen(),
                         withNavBar: true, // OPTIONAL VALUE. True by default.
                         pageTransitionAnimation:
                             PageTransitionAnimation.cupertino,

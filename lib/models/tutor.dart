@@ -7,31 +7,34 @@ class Tutor {
   List<dynamic>? subjects;
   num? minPrice;
   num? maxPrice;
+  List<Tutoring>? tutorings;
 
-  Tutor({
-    this.id,
-    this.name,
-    this.picture,
-    this.categories,
-    this.minPrice,
-    this.maxPrice,
-    this.about,
-    this.degree,
-    this.education,
-    this.subjects,
-  });
+  Tutor(
+      {this.id,
+      this.name,
+      this.picture,
+      this.categories,
+      this.minPrice,
+      this.maxPrice,
+      this.about,
+      this.degree,
+      this.education,
+      this.subjects,
+      this.tutorings});
 
   factory Tutor.fromJson(Map<String, dynamic> json) => Tutor(
-      id: json['id'],
-      name: json['name'],
-      picture: json['picture'],
-      categories: json['categories'],
-      minPrice: json['minimum_price'],
-      maxPrice: json['maximum_price'],
-      about: json["about"],
-      degree: json["degree"],
-      education: json["education"],
-      subjects: json["subjects"]);
+        id: json['id'],
+        name: json['name'],
+        picture: json['picture'],
+        categories: json['categories'],
+        minPrice: json['minimum_price'],
+        maxPrice: json['maximum_price'],
+        about: json["about"],
+        degree: json["degree"],
+        education: json["education"],
+        subjects: json["subjects"],
+        // tutorings: json["tutorings"]
+      );
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -43,6 +46,7 @@ class Tutor {
         'about': about,
         'degree': degree,
         'education': education,
-        'subjects': subjects
+        'subjects': subjects,
+        // 'tutorings': tutorings
       };
 }

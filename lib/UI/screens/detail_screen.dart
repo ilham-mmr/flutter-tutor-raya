@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
+import 'package:toast/toast.dart';
 import 'package:tutor_raya_mobile/UI/screens/booking_screen.dart';
 import 'package:tutor_raya_mobile/UI/widgets/category_card.dart';
 import 'package:tutor_raya_mobile/models/category.dart';
 import 'package:tutor_raya_mobile/models/tutor.dart';
 import 'package:tutor_raya_mobile/models/tutoring.dart';
 import 'package:tutor_raya_mobile/providers/tutor.dart';
+import 'package:tutor_raya_mobile/providers/tutoring.dart';
 import 'package:tutor_raya_mobile/styles/color_constants.dart';
 import 'package:tutor_raya_mobile/styles/style_constants.dart';
 import 'package:tutor_raya_mobile/utils/constants.dart';
@@ -67,8 +70,11 @@ class _DetailScreenState extends State<DetailScreen> {
     }
     return Stack(
       children: [
-        Image.network(
-          "$API_STORAGE${tutor.picture!}",
+        Image(
+          image: tutor.picture != null
+              ? NetworkImage("$API_STORAGE${tutor.picture!}")
+              : const AssetImage("assets/images/blank-profile.png")
+                  as ImageProvider,
           width: double.infinity,
           fit: BoxFit.cover,
         ),
@@ -382,14 +388,27 @@ class TutoringExpansionTile extends StatelessWidget {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(18.0),
                         )),
-                    onPressed: () {
-                      pushNewScreen(
-                        context,
-                        screen: const BookingScreen(),
-                        withNavBar: true, // OPTIONAL VALUE. True by default.
-                        pageTransitionAnimation:
-                            PageTransitionAnimation.cupertino,
-                      );
+                    onPressed: () async {
+                      context.loaderOverlay.show();
+                      bool isBooked = await Provider.of<TutoringProvider>(
+                              context,
+                              listen: false)
+                          .bookTutoring(tutoring.id!);
+
+                      if (isBooked) {
+                        pushNewScreen(
+                          context,
+                          screen: const BookingScreen(),
+                          withNavBar: true, // OPTIONAL VALUE. True by default.
+                          pageTransitionAnimation:
+                              PageTransitionAnimation.cupertino,
+                        );
+                      } else {
+                        Toast.show("Booking F",
+                            duration: Toast.lengthLong, gravity: Toast.bottom);
+                      }
+
+                      context.loaderOverlay.hide();
                     },
                     child: Text(
                       'Book Now',

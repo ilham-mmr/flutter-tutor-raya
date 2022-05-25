@@ -26,7 +26,6 @@ class BookingScreen extends StatelessWidget {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    print('hi');
                     Navigator.of(context).pop();
                   },
                   child: const Text(

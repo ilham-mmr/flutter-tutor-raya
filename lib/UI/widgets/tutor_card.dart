@@ -60,7 +60,7 @@ class _TutorCardState extends State<TutorCard> {
                                   as ImageProvider,
                           height: 100,
                           width: 200,
-                          fit: BoxFit.contain,
+                          fit: BoxFit.cover,
                         ),
                       ),
                       Positioned(

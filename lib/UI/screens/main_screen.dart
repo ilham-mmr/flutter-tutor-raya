@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:tutor_raya_mobile/UI/screens/favorited_screen.dart';
+import 'package:tutor_raya_mobile/UI/screens/history_screen.dart';
 import 'package:tutor_raya_mobile/UI/screens/home_screen.dart';
 import 'package:tutor_raya_mobile/UI/screens/profile_screen.dart';
 import 'package:tutor_raya_mobile/UI/screens/search_screen.dart';
@@ -60,9 +61,7 @@ class MainScreen extends StatelessWidget {
       HomeScreen(),
       FavoritedScreen(),
       SearchScreen(),
-      Container(
-        child: Text('hi anj'),
-      ),
+      HistoryScreen(),
       ProfileScreen(),
     ];
   }

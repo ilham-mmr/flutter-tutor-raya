@@ -8,6 +8,7 @@ import 'package:tutor_raya_mobile/UI/screens/splash_screen.dart';
 import 'package:tutor_raya_mobile/providers/auth.dart';
 import 'package:tutor_raya_mobile/providers/category.dart';
 import 'package:tutor_raya_mobile/providers/tutor.dart';
+import 'package:tutor_raya_mobile/providers/tutoring.dart';
 import 'package:tutor_raya_mobile/styles/color_constants.dart';
 
 void main() {
@@ -56,6 +57,9 @@ class RouterAuth extends StatelessWidget {
                 ),
                 ChangeNotifierProvider(
                   create: (_) => TutorProvider(authProvider),
+                ),
+                ChangeNotifierProvider(
+                  create: (_) => TutoringProvider(authProvider),
                 ),
               ],
               child: MainScreen(),

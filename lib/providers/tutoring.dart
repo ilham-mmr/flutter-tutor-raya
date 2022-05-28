@@ -17,8 +17,8 @@ class TutoringProvider with ChangeNotifier {
     return data;
   }
 
-  getBookedTutorings() async {
-    var data = await tutoringService.getBookedTutorings();
+  getBookedLessons() async {
+    var data = await tutoringService.getBookedLessons();
     return data;
   }
 }

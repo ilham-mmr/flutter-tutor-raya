@@ -1,3 +1,4 @@
+import 'package:tutor_raya_mobile/models/lesson.dart';
 import 'package:tutor_raya_mobile/providers/auth.dart';
 import 'package:tutor_raya_mobile/utils/constants.dart';
 import 'package:http/http.dart' as http;
@@ -34,5 +35,31 @@ class TutoringService {
     return false;
   }
 
-  getBookedTutorings() {}
+  getBookedLessons() async {
+    if (authProvider.user?.id == null) {
+      return;
+    }
+    String url =
+        API_ROOT + "/lessons?user_id=${authProvider.user!.id.toString()}";
+
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer $token',
+        'Accept': 'application/json'
+      },
+    );
+
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
+
+      var lessons =
+          data["lessons"].map<Lesson>((item) => Lesson.fromJson(item)).toList();
+      print(lessons);
+
+      return lessons;
+    }
+
+    return Future.error('No data');
+  }
 }

@@ -12,6 +12,8 @@ import 'package:tutor_raya_mobile/providers/tutoring.dart';
 import 'package:tutor_raya_mobile/styles/color_constants.dart';
 
 void main() {
+  // WidgetsFlutterBinding.ensureInitialized();
+
   runApp(
     ChangeNotifierProvider(
       create: (context) => AuthProvider(),

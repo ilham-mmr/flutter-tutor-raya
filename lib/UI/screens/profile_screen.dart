@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:provider/provider.dart';
-import 'package:tutor_raya_mobile/models/user.dart';
 import 'package:tutor_raya_mobile/providers/auth.dart';
 import 'package:tutor_raya_mobile/styles/color_constants.dart';
 import 'package:tutor_raya_mobile/styles/style_constants.dart';
@@ -16,9 +15,10 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  late final TextEditingController _aboutController = TextEditingController();
-  late final TextEditingController _educationController =
-      TextEditingController();
+  // late final TextEditingController _aboutController = TextEditingController();
+  // late final TextEditingController _educationController =
+  //     TextEditingController();
+  // late final TextEditingController _phoneController = TextEditingController();
 
   @override
   void initState() {
@@ -28,8 +28,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void dispose() {
     super.dispose();
-    _aboutController.dispose();
-    _educationController.dispose();
+    // _aboutController.dispose();
+    // _educationController.dispose();
+    // _phoneController.dispose();
   }
 
   bool isEditing = false;
@@ -37,17 +38,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   String about = "";
   String education = "";
+  String phoneNumber = "";
 
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<AuthProvider>(context, listen: false).user;
 
     double height = MediaQuery.of(context).size.height;
-    print('hi');
     return Scaffold(
       // backgroundColor: kBasicBackgroundColor,
       body: SafeArea(
         child: SingleChildScrollView(
+          // physics: const NeverScrollableScrollPhysics(),
           child: Stack(
             children: [
               Align(
@@ -81,11 +83,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     setState(() {
                                       if (isEditing) {
                                         print(about);
-                                        print(_educationController.text);
+                                        print(phoneNumber);
+                                        print(education);
                                         updateUserInfo(context);
-                                        // clear text after update
-                                        // _aboutController.clear();
-                                        // _educationController.clear();
                                       }
                                       isEditing = !isEditing;
                                     });
@@ -99,7 +99,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     Container(
                       width: double.infinity,
-                      height: height,
+                      height: height * 0.7,
                       constraints: const BoxConstraints(
                         maxHeight: double.infinity,
                       ),
@@ -184,6 +184,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     style: const TextStyle(
                                         fontSize: 18, color: Colors.grey),
                                   ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            const Text(
+                              'Phone Number',
+                              style: TextStyle(fontSize: 18),
+                            ),
+                            isEditing
+                                ? TextField(
+                                    controller: TextEditingController()
+                                      ..text = user.phoneNumber ?? '',
+                                    onChanged: (text) => {phoneNumber = text},
+                                    keyboardType: TextInputType.number,
+                                  )
+                                : Text(
+                                    user.phoneNumber ?? "-",
+                                    style: const TextStyle(
+                                        fontSize: 18, color: Colors.grey),
+                                  ),
                             TextButton(
                               style: TextButton.styleFrom(
                                 textStyle: const TextStyle(fontSize: 20),
@@ -211,11 +230,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     submit = true;
     context.loaderOverlay.show();
     await Provider.of<AuthProvider>(context, listen: false)
-        .updateAbout(about, education);
+        .updateAbout(about, education, phoneNumber);
     context.loaderOverlay.hide();
 
-    print(_aboutController.text);
-    print(_educationController.text);
+    print(about);
+    print(education);
   }
 
   showLogoutConfirmationDialog(BuildContext context) {

@@ -16,11 +16,32 @@ class TutorService {
     token = authProvider.token;
   }
 
-  Future<List<Tutor>> getTutors([int? limit]) async {
-    String url = API_ROOT + "/tutors";
+  Future<List<Tutor>> getTutors(
+      {int? limit, String? keyword, Map<String, dynamic>? filters}) async {
+    String url = API_ROOT + "/tutors?";
     if (limit != null) {
-      url += '?limit=$limit';
+      url += 'limit=$limit&';
     }
+    if (keyword != null) {
+      url += 'keyword=$keyword&';
+    }
+
+    // // convert filters to data map
+    // var dataFilters = {
+    //   "minPrice": filters?["minPrice"] ?? "",
+    //   "maxPrice": filters?["minPrice"] ?? "",
+    //   "date": filters?["date"].toString() ?? "",
+    //   "category": filters?["category"].toString() ?? ""
+    // };
+
+    filters?.forEach((key, value) {
+      if (value != "") {
+        url += '$key=$value&';
+      }
+    });
+
+    print(url);
+
     final response = await http.get(
       Uri.parse(url),
       headers: {
@@ -28,14 +49,11 @@ class TutorService {
         'Accept': 'application/json'
       },
     );
-
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
       List<Tutor> tutors =
           data.map<Tutor>((item) => Tutor.fromJson(item)).toList();
-      // tutors.forEach((element) {
-      //   print(element.minPrice);
-      // });
+
       return tutors;
     }
     return <Tutor>[];

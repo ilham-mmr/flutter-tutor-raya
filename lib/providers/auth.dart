@@ -81,12 +81,14 @@ class AuthProvider with ChangeNotifier {
     return false;
   }
 
-  Future<bool> updateAbout(String? about, String? education) async {
+  Future<bool> updateAbout(
+      String? about, String? education, String? phoneNumber) async {
     final url = Uri.parse("$API_ROOT/users/${_user?.id}/profile");
 
     Map<String, String> body = {
       'about': about ?? "",
-      'education': education ?? ""
+      'education': education ?? "",
+      'phone_number': phoneNumber ?? ""
     };
 
     final response = await http.put(
@@ -97,6 +99,7 @@ class AuthProvider with ChangeNotifier {
         'Accept': 'application/json'
       },
     );
+    print(response.statusCode);
     if (response.statusCode == 200) {
       Map<String, dynamic> apiResponse = json.decode(response.body)['data'];
       _user = User.fromJson(apiResponse);

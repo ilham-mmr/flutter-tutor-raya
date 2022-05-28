@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 import 'package:provider/provider.dart';
 import 'package:tutor_raya_mobile/UI/widgets/category_card.dart';
 import 'package:tutor_raya_mobile/UI/widgets/tutor_card.dart';
@@ -24,12 +25,15 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<AuthProvider>(context, listen: false).user;
-    print('hi');
     return Scaffold(
       // backgroundColor: kBasicBackgroundColor,
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: () async {
+            context.loaderOverlay.show();
+            await Future.delayed(Duration(seconds: 3));
+            context.loaderOverlay.hide();
+
             setState(() {});
           },
           child: SingleChildScrollView(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tutor_raya_mobile/models/tutor.dart';
 import 'package:tutor_raya_mobile/providers/auth.dart';
 import 'package:tutor_raya_mobile/services/tutor_api.dart';
 
@@ -7,14 +8,25 @@ class TutorProvider with ChangeNotifier {
   AuthProvider authProvider;
   //  ApiService apiService;
   late TutorService tutorService;
+  List<Tutor> _tutors = [];
+  get tutors {
+    return _tutors;
+  }
 
   TutorProvider(this.authProvider) {
     tutorService = TutorService(authProvider);
   }
 
   getTutors([int? limit]) async {
-    var data = await tutorService.getTutors(limit);
+    var data = await tutorService.getTutors(limit: limit);
     return data;
+  }
+
+  searchTutors({String? keyword, Map<String, dynamic>? filters}) async {
+    var data =
+        await tutorService.getTutors(keyword: keyword ?? "", filters: filters);
+    _tutors = data;
+    notifyListeners();
   }
 
   getTutorDetail(int? id) async {

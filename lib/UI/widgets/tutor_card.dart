@@ -59,12 +59,12 @@ class _TutorCardState extends State<TutorCard> {
                                       "assets/images/blank-profile.png")
                                   as ImageProvider,
                           height: 100,
-                          width: 200,
+                          width: double.infinity,
                           fit: BoxFit.cover,
                         ),
                       ),
                       Positioned(
-                        bottom: 70,
+                        bottom: 60,
                         right:
                             15, //give the values according to your requirement
                         child: GestureDetector(

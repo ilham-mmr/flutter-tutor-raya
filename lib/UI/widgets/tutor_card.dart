@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import 'package:provider/provider.dart';
 import 'package:tutor_raya_mobile/UI/screens/detail_screen.dart';
 import 'package:tutor_raya_mobile/models/tutor.dart';
+import 'package:tutor_raya_mobile/providers/auth.dart';
+import 'package:tutor_raya_mobile/providers/tutor.dart';
 import 'package:tutor_raya_mobile/utils/constants.dart';
 
 class TutorCard extends StatefulWidget {
   const TutorCard({
     Key? key,
-    required this.tutor,
+    // required this.tutor,
   }) : super(key: key);
 
-  final Tutor tutor;
+  // final Tutor tutor;
 
   @override
   State<TutorCard> createState() => _TutorCardState();
@@ -20,7 +23,10 @@ class _TutorCardState extends State<TutorCard> {
   bool isFavorited = false;
   @override
   Widget build(BuildContext context) {
-    var tutor = widget.tutor;
+    var currentUser = Provider.of<AuthProvider>(context, listen: false);
+    var tutorProvider = Provider.of<TutorProvider>(context, listen: false);
+    var tutor = Provider.of<Tutor>(context, listen: false);
+    // var tutor = widget.tutor;
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Card(
@@ -67,22 +73,30 @@ class _TutorCardState extends State<TutorCard> {
                         bottom: 60,
                         right:
                             15, //give the values according to your requirement
-                        child: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              isFavorited = !isFavorited;
-                            });
+                        child: Consumer<Tutor>(
+                          builder: (context, tutor, child) {
+                            return GestureDetector(
+                              onTap: () {
+                                tutor.toggleFavoriteStatus(
+                                    currentUser.token, tutor.id.toString());
+                                if (tutor.isFavorite) {
+                                  tutorProvider.removeFavoriteTutor(tutor);
+                                } else {
+                                  tutorProvider.addFavoriteTutor(tutor);
+                                }
+                              },
+                              child: CircleAvatar(
+                                radius: 16,
+                                backgroundColor: Colors.white,
+                                child: Icon(
+                                  tutor.isFavorite
+                                      ? Icons.favorite
+                                      : Icons.favorite_border_outlined,
+                                  color: Colors.red,
+                                ),
+                              ),
+                            );
                           },
-                          child: CircleAvatar(
-                            radius: 16,
-                            backgroundColor: Colors.white,
-                            child: Icon(
-                              isFavorited
-                                  ? Icons.favorite
-                                  : Icons.favorite_border_outlined,
-                              color: Colors.red,
-                            ),
-                          ),
                         ),
                       ),
                     ],

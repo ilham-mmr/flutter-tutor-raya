@@ -58,19 +58,21 @@ class _SearchScreenState extends State<SearchScreen> {
                 },
               ),
               Expanded(
-                  flex: 10,
-                  child: Consumer<TutorProvider>(
-                    builder: (context, tutorsList, child) {
-                      List<Tutor> tutors = tutorsList.tutors;
+                flex: 10,
+                child: Consumer<TutorProvider>(
+                  builder: (context, tutorsList, child) {
+                    List<Tutor> tutors = tutorsList.tutors;
 
-                      return ListView.builder(
-                        itemCount: tutors.length,
-                        itemBuilder: (context, index) {
-                          return TutorCard(tutor: tutors[index]);
-                        },
-                      );
-                    },
-                  ))
+                    return ListView.builder(
+                      itemCount: tutors.length,
+                      itemBuilder: (context, index) {
+                        return ChangeNotifierProvider.value(
+                            value: tutors[index], child: TutorCard());
+                      },
+                    );
+                  },
+                ),
+              )
             ],
           ),
         ),
@@ -231,11 +233,11 @@ class _SearchScreenState extends State<SearchScreen> {
       "date": "",
       "category": ""
     };
-    context.loaderOverlay.show();
+    // context.loaderOverlay.show();
     await Provider.of<TutorProvider>(context, listen: false)
         .searchTutors(keyword: value, filters: filters);
-    context.loaderOverlay.hide();
+    // context.loaderOverlay.hide();
 
-    Navigator.of(context).pop();
+    // Navigator.of(context).pop();
   }
 }

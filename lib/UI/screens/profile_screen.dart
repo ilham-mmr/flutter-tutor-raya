@@ -47,9 +47,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
       // backgroundColor: kBasicBackgroundColor,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          // physics: const NeverScrollableScrollPhysics(),
+      body: SingleChildScrollView(
+        child: SafeArea(
           child: Stack(
             children: [
               Align(
@@ -99,7 +98,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     Container(
                       width: double.infinity,
-                      height: height * 0.7,
+                      height: height * 0.8,
                       constraints: const BoxConstraints(
                         maxHeight: double.infinity,
                       ),
@@ -117,7 +116,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             Align(
                               alignment: Alignment.center,
                               child: CircleAvatar(
-                                radius: 60,
+                                radius: 50,
                                 backgroundImage: user?.picture != null
                                     ? NetworkImage(
                                         "$API_STORAGE${user?.picture!}")
@@ -130,11 +129,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             const SizedBox(
                               height: 20,
                             ),
-                            Flexible(
-                              child: Text(
-                                user!.name!.toUpperCase(),
-                                style: const TextStyle(fontSize: 18),
-                              ),
+                            Text(
+                              user!.name!.toUpperCase(),
+                              style: const TextStyle(fontSize: 18),
                             ),
                             const SizedBox(
                               height: 20,
@@ -232,9 +229,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     await Provider.of<AuthProvider>(context, listen: false)
         .updateAbout(about, education, phoneNumber);
     context.loaderOverlay.hide();
-
-    print(about);
-    print(education);
   }
 
   showLogoutConfirmationDialog(BuildContext context) {

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:tutor_raya_mobile/UI/widgets/favorite_card.dart';
+import 'package:tutor_raya_mobile/models/tutor.dart';
 import 'package:tutor_raya_mobile/styles/color_constants.dart';
 import 'package:tutor_raya_mobile/styles/style_constants.dart';
 
@@ -10,6 +12,8 @@ class FavoritedScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
+    var tutor = Provider.of<Tutor>(context, listen: false);
+
     return Scaffold(
       // backgroundColor: kBasicBackgroundColor,
       body: SafeArea(

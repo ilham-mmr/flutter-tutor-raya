@@ -175,15 +175,25 @@ class _HomeScreenState extends State<HomeScreen> {
                               builder: (context, snapshot) {
                                 if (snapshot.hasData) {
                                   var data = snapshot.data as List<Tutor>;
+                                  print(data);
                                   if (data.isNotEmpty) {
                                     return ListView(
                                       scrollDirection: Axis.horizontal,
                                       shrinkWrap: true,
                                       padding: const EdgeInsets.all(8),
-                                      children: data
-                                          .map<Widget>((tutor) =>
-                                              TutorCard(tutor: tutor))
-                                          .toList(),
+                                      children:
+
+                                          //  data
+                                          //     .map<Widget>((tutor) =>
+                                          //         TutorCard(tutor: tutor))
+                                          //     .toList(),
+                                          data
+                                              .map<Widget>((tutor) =>
+                                                  ChangeNotifierProvider<
+                                                          Tutor>.value(
+                                                      value: tutor,
+                                                      child: TutorCard()))
+                                              .toList(),
                                     );
                                   }
                                   return Center(

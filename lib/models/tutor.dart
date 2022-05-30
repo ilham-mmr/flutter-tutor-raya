@@ -1,6 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:tutor_raya_mobile/models/tutoring.dart';
+import 'package:tutor_raya_mobile/utils/constants.dart';
+import 'package:http/http.dart' as http;
+import 'dart:async';
+import 'dart:io';
 
-class Tutor {
+class Tutor with ChangeNotifier {
   int? id;
   String? name, picture, about, education, degree;
   List<dynamic>? categories;
@@ -8,6 +13,7 @@ class Tutor {
   num? minPrice;
   num? maxPrice;
   List<Tutoring>? tutorings;
+  bool isFavorite;
 
   Tutor(
       {this.id,
@@ -20,7 +26,8 @@ class Tutor {
       this.degree,
       this.education,
       this.subjects,
-      this.tutorings});
+      this.tutorings,
+      this.isFavorite = false});
 
   factory Tutor.fromJson(Map<String, dynamic> json) => Tutor(
         id: json['id'],
@@ -49,4 +56,35 @@ class Tutor {
         'subjects': subjects,
         // 'tutorings': tutorings
       };
+
+  _setFavValue(bool newValue) {
+    isFavorite = newValue;
+    notifyListeners();
+  }
+
+  Future<void> toggleFavoriteStatus(String token, String tutorId) async {
+    final oldStatus = isFavorite;
+    isFavorite = !isFavorite;
+    notifyListeners();
+
+    var url = Uri.parse(API_ROOT + "/tutor-favorites");
+
+    // send url
+
+    try {
+      final response = await http.put(url, headers: {
+        HttpHeaders.authorizationHeader: 'Bearer $token',
+        'Accept': 'application/json'
+      }, body: {
+        'tutor_id': tutorId,
+        'is_favorite': isFavorite ? '1' : '0'
+      });
+
+      if (response.statusCode >= 400) {
+        _setFavValue(oldStatus);
+      }
+    } catch (error) {
+      _setFavValue(oldStatus);
+    }
+  }
 }

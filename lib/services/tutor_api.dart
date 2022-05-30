@@ -40,8 +40,6 @@ class TutorService {
       }
     });
 
-    print(url);
-
     final response = await http.get(
       Uri.parse(url),
       headers: {
@@ -49,6 +47,9 @@ class TutorService {
         'Accept': 'application/json'
       },
     );
+
+    // print(response.body);
+
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
       List<Tutor> tutors =
@@ -57,6 +58,26 @@ class TutorService {
       return tutors;
     }
     return <Tutor>[];
+  }
+
+  getUserFavoriteTutors() async {
+    var url = Uri.parse(API_ROOT + "/tutor-favorites");
+    final response = await http.get(
+      url,
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer $token',
+        'Accept': 'application/json'
+      },
+    );
+    Map<String, dynamic> data = {};
+
+    if (response.statusCode == 200) {
+      data = jsonDecode(response.body);
+      // print(data['7']['is_favorite'] == 1);
+      return data;
+    }
+
+    return null;
   }
 
   getTutorDetail(int? id) async {

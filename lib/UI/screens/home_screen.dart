@@ -175,7 +175,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               builder: (context, snapshot) {
                                 if (snapshot.hasData) {
                                   var data = snapshot.data as List<Tutor>;
-                                  print(data);
                                   if (data.isNotEmpty) {
                                     return ListView(
                                       scrollDirection: Axis.horizontal,

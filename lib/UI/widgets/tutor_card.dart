@@ -79,9 +79,12 @@ class _TutorCardState extends State<TutorCard> {
                               onTap: () {
                                 tutor.toggleFavoriteStatus(
                                     currentUser.token, tutor.id.toString());
-                                if (tutor.isFavorite) {
+                                if (!tutor.isFavorite) {
+                                  print('should be removed');
                                   tutorProvider.removeFavoriteTutor(tutor);
                                 } else {
+                                  print('should be added');
+
                                   tutorProvider.addFavoriteTutor(tutor);
                                 }
                               },

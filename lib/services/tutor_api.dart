@@ -60,10 +60,13 @@ class TutorService {
     return <Tutor>[];
   }
 
-  getUserFavoriteTutors() async {
-    var url = Uri.parse(API_ROOT + "/tutor-favorites");
+  getUserFavoriteTutors({bool? withDetails}) async {
+    var url = API_ROOT + "/tutor-favorites?";
+    if (withDetails != null && withDetails) {
+      url += 'with_details=true';
+    }
     final response = await http.get(
-      url,
+      Uri.parse(url),
       headers: {
         HttpHeaders.authorizationHeader: 'Bearer $token',
         'Accept': 'application/json'
@@ -71,13 +74,31 @@ class TutorService {
     );
     Map<String, dynamic> data = {};
 
-    if (response.statusCode == 200) {
-      data = jsonDecode(response.body);
-      // print(data['7']['is_favorite'] == 1);
-      return data;
+    try {
+      if (response.statusCode == 200) {
+        if (withDetails != null && withDetails) {
+          return jsonDecode(response.body)["data"];
+        }
+        data = jsonDecode(response.body);
+        return data;
+      }
+    } catch (e) {
+      return null;
     }
+  }
 
-    return null;
+  removeRemoteFavoriteTutor(String id) async {
+    var url = Uri.parse(API_ROOT + "/tutor-favorites/$id");
+
+    final response = await http.delete(url, headers: {
+      HttpHeaders.authorizationHeader: 'Bearer $token',
+      'Accept': 'application/json'
+    });
+
+    if (response.statusCode == 200) {
+      return true;
+    }
+    return false;
   }
 
   getTutorDetail(int? id) async {

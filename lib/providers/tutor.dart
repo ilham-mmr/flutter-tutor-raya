@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tutor_raya_mobile/models/tutor.dart';
 import 'package:tutor_raya_mobile/providers/auth.dart';
 import 'package:tutor_raya_mobile/services/tutor_api.dart';
+import 'package:collection/collection.dart';
 
 class TutorProvider with ChangeNotifier {
   // AuthProvier
@@ -27,9 +28,8 @@ class TutorProvider with ChangeNotifier {
     var favoriteData = await tutorService.getUserFavoriteTutors();
     // final List<Tutor> loadedProducts = [];
     for (var tutor in data) {
-      // print(favoriteData['${tutor.id}']['is_favorite']);
       // if (favoriteData['${tutor.id}']['is_favorite'] == 1) {
-      //   addFavoriteTutor(tutor);
+      //   print('favoriteData');
       // }
       tutor.isFavorite = favoriteData['${tutor.id}'] == null
           ? false
@@ -40,9 +40,31 @@ class TutorProvider with ChangeNotifier {
     return data;
   }
 
+  getFavoriteTutors() async {
+    var favoriteTutors =
+        await tutorService.getUserFavoriteTutors(withDetails: true);
+    // print(favoriteTutors);
+    // var favoriteData = await tutorService.getUserFavoriteTutors();
+    // print(favoriteTutors.cast<String, dynamic>());
+    // TODO: FIX THIS BUG
+    List<Tutor> tutors =
+        favoriteTutors.map<Tutor>((item) => Tutor.fromJson(item)).toList();
+
+    // for (var tutor in tutors) {
+    //   tutor.isFavorite = favoriteData['${tutor.id}'] == null
+    //       ? false
+    //       : favoriteData['${tutor.id}']['is_favorite'] == 1
+    //           ? true
+    //           : false;
+    // }
+
+    _favoriteTutors = tutors;
+    notifyListeners();
+  }
+
   addFavoriteTutor(Tutor tutor) {
     var foundTutor =
-        _favoriteTutors.firstWhere((element) => element.id == tutor.id);
+        _favoriteTutors.firstWhereOrNull((element) => element.id == tutor.id);
     if (foundTutor == null) {
       _favoriteTutors.add(tutor);
       notifyListeners();
@@ -53,7 +75,13 @@ class TutorProvider with ChangeNotifier {
     var filteredFavoriteTutors =
         _favoriteTutors.where((element) => !(element.id == tutor.id)).toList();
     _favoriteTutors = filteredFavoriteTutors;
+    print(_favoriteTutors);
+
     notifyListeners();
+  }
+
+  removeRemoteFavoriteTutor(String id) async {
+    return await tutorService.removeRemoteFavoriteTutor(id);
   }
 
   searchTutors({String? keyword, Map<String, dynamic>? filters}) async {
@@ -64,11 +92,14 @@ class TutorProvider with ChangeNotifier {
       // if (favoriteData['${tutor.id}']['is_favorite'] == 1) {
       //   addFavoriteTutor(tutor);
       // }
-      tutor.isFavorite = favoriteData['${tutor.id}'] == null
-          ? false
-          : favoriteData['${tutor.id}']['is_favorite'] == 1
-              ? true
-              : false;
+
+      if (favoriteData != null) {
+        tutor.isFavorite = favoriteData['${tutor.id}'] == null
+            ? false
+            : favoriteData['${tutor.id}']['is_favorite'] == 1
+                ? true
+                : false;
+      }
     }
     _tutors = data;
 

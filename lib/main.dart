@@ -13,13 +13,14 @@ import 'package:tutor_raya_mobile/providers/tutoring.dart';
 import 'package:tutor_raya_mobile/styles/color_constants.dart';
 
 void main() {
-  // WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
 
   runApp(
     ChangeNotifierProvider(
       create: (context) => AuthProvider(),
       child: GlobalLoaderOverlay(
         child: MaterialApp(
+          debugShowCheckedModeBanner: false,
           title: 'Tutor Raya',
           initialRoute: '/',
           theme: ThemeData(
@@ -51,7 +52,7 @@ class RouterAuth extends StatelessWidget {
           case Status.Uninitialized:
             return const Loading();
           case Status.Unauthenticated:
-            return const LoginScreen();
+            return const SplashScreen();
           case Status.Authenticated:
             return MultiProvider(
               providers: [

@@ -28,7 +28,6 @@ class _DetailScreenState extends State<DetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.tutorId);
     double height = MediaQuery.of(context).size.height -
         MediaQuery.of(context).viewPadding.top;
     double width = MediaQuery.of(context).size.width;
@@ -128,19 +127,19 @@ class _DetailScreenState extends State<DetailScreen> {
                 ),
               ),
             ),
-            InkWell(
-              onTap: () {},
-              child: const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: CircleAvatar(
-                  child: Icon(
-                    Icons.favorite,
-                    color: Colors.red,
-                  ),
-                  backgroundColor: Colors.white,
-                ),
-              ),
-            ),
+            // InkWell(
+            //   onTap: () {},
+            //   child: const Padding(
+            //     padding: EdgeInsets.all(8.0),
+            //     child: CircleAvatar(
+            //       child: Icon(
+            //         Icons.favorite,
+            //         color: Colors.red,
+            //       ),
+            //       backgroundColor: Colors.white,
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       ],
@@ -404,7 +403,7 @@ class TutoringExpansionTile extends StatelessWidget {
                               PageTransitionAnimation.cupertino,
                         );
                       } else {
-                        Toast.show("Booking F",
+                        Toast.show("You have booked this session!",
                             duration: Toast.lengthLong, gravity: Toast.bottom);
                       }
 

@@ -5,7 +5,7 @@ import 'package:tutor_raya_mobile/styles/style_constants.dart';
 
 class CategoryCard extends StatelessWidget {
   const CategoryCard(
-      {required this.category, this.onTap, this.tappable = true, Key? key})
+      {required this.category, this.onTap, this.tappable = false, Key? key})
       : super(key: key);
 
   final Category category;

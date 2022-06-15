@@ -11,7 +11,7 @@ class TutorProvider with ChangeNotifier {
   late TutorService tutorService;
   List<Tutor> _tutors = [];
   List<Tutor> _favoriteTutors = [];
-  get tutors {
+  List<Tutor> get tutors {
     return _tutors;
   }
 
@@ -31,11 +31,13 @@ class TutorProvider with ChangeNotifier {
       // if (favoriteData['${tutor.id}']['is_favorite'] == 1) {
       //   print('favoriteData');
       // }
-      tutor.isFavorite = favoriteData['${tutor.id}'] == null
-          ? false
-          : favoriteData['${tutor.id}']['is_favorite'] == 1
-              ? true
-              : false;
+      if (favoriteData != null) {
+        tutor.isFavorite = favoriteData['${tutor.id}'] == null
+            ? false
+            : favoriteData['${tutor.id}']['is_favorite'] == 1
+                ? true
+                : false;
+      }
     }
     return data;
   }
@@ -82,6 +84,26 @@ class TutorProvider with ChangeNotifier {
 
   removeRemoteFavoriteTutor(String id) async {
     return await tutorService.removeRemoteFavoriteTutor(id);
+  }
+
+  getTutorsByCategory({String? keyword}) async {
+    var data = await tutorService
+        .getTutors(keyword: "", filters: {'category': keyword});
+    var favoriteData = await tutorService.getUserFavoriteTutors();
+
+    for (var tutor in data) {
+      // if (favoriteData['${tutor.id}']['is_favorite'] == 1) {
+      //   print('favoriteData');
+      // }
+      if (favoriteData != null) {
+        tutor.isFavorite = favoriteData['${tutor.id}'] == null
+            ? false
+            : favoriteData['${tutor.id}']['is_favorite'] == 1
+                ? true
+                : false;
+      }
+    }
+    return data;
   }
 
   searchTutors({String? keyword, Map<String, dynamic>? filters}) async {

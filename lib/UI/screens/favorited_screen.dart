@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tutor_raya_mobile/UI/widgets/favorite_card.dart';
@@ -60,8 +61,7 @@ class _FavoritedScreenState extends State<FavoritedScreen> {
                       child: CircleAvatar(
                         radius: 30,
                         backgroundImage: currentUser?.picture != null
-                            ? NetworkImage(
-                                "$API_STORAGE${currentUser?.picture!}")
+                            ? NetworkImage("${currentUser?.picture!}")
                             : const AssetImage(
                                     "assets/images/blank-profile.png")
                                 as ImageProvider,
@@ -77,7 +77,7 @@ class _FavoritedScreenState extends State<FavoritedScreen> {
                     ),
                     Container(
                       width: double.infinity,
-                      height: height,
+                      height: height * 0.8,
                       constraints: const BoxConstraints(
                         maxHeight: double.infinity,
                       ),
@@ -99,7 +99,27 @@ class _FavoritedScreenState extends State<FavoritedScreen> {
                           //   },
 
                           // );
-                          print(tutors);
+                          if (tutors.isEmpty) {
+                            return Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Center(
+                                  child: SvgPicture.asset(
+                                    'assets/images/illustration/undraw_appreciated_xcjn.svg',
+                                    height: 250,
+                                  ),
+                                ),
+                                const Padding(
+                                  padding: EdgeInsets.only(bottom: 32),
+                                  child: Text(
+                                    'Add tutors to favorited list',
+                                    textAlign: TextAlign.start,
+                                    style: TextStyle(fontSize: 18),
+                                  ),
+                                ),
+                              ],
+                            );
+                          }
                           return ListView.builder(
                             itemCount: tutors.length,
                             itemBuilder: (context, index) {

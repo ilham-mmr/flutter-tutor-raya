@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
+import 'package:tutor_raya_mobile/UI/screens/login_screen.dart';
 import 'package:tutor_raya_mobile/UI/screens/main_screen.dart';
 import 'package:tutor_raya_mobile/UI/screens/testing_screen.dart';
 import 'package:tutor_raya_mobile/providers/auth.dart';
@@ -9,14 +11,14 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tutor_raya_mobile/styles/style_constants.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({Key? key}) : super(key: key);
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,33 +62,34 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ElevatedButton.icon(
-                      onPressed: signIn,
-                      label: const Text(
-                        'Continue with google',
-                        style: TextStyle(fontSize: 20),
-                      ),
-                      icon: const FaIcon(
-                        FontAwesomeIcons.google,
-                      ),
-                      style: kTorqueiseElevatedButtonSytle,
-                    ),
+                  SvgPicture.asset(
+                    'assets/images/illustration/undraw_searching_re_3ra9.svg',
+                    height: 200,
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: ElevatedButton.icon(
                       onPressed: () {
-                        Navigator.of(context)
-                            .pushReplacementNamed('/main-screen');
+                        pushNewScreen(
+                          context,
+                          screen: const LoginScreen(),
+                          withNavBar: true, // OPTIONAL VALUE. True by default.
+                          pageTransitionAnimation:
+                              PageTransitionAnimation.slideUp,
+                        );
+
+                        // Navigator.pushReplacement(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (BuildContext context) =>
+                        //             const LoginScreen()));
                       },
                       label: const Text(
-                        'Continue with facebook',
+                        'Explore Now',
                         style: TextStyle(fontSize: 20),
                       ),
                       icon: const FaIcon(
-                        FontAwesomeIcons.facebook,
+                        FontAwesomeIcons.arrowCircleRight,
                       ),
                       style: kTorqueiseElevatedButtonSytle,
                     ),

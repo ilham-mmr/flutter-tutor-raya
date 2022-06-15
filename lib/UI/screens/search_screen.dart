@@ -1,23 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:provider/provider.dart';
+import 'package:toast/toast.dart';
 import 'package:tutor_raya_mobile/UI/widgets/tutor_card.dart';
+import 'package:tutor_raya_mobile/models/category.dart';
 import 'package:tutor_raya_mobile/models/tutor.dart';
+import 'package:tutor_raya_mobile/providers/category.dart';
 import 'package:tutor_raya_mobile/providers/tutor.dart';
 import 'package:tutor_raya_mobile/styles/color_constants.dart';
 import 'package:tutor_raya_mobile/styles/style_constants.dart';
 import 'package:intl/intl.dart';
+import 'package:collection/collection.dart';
 
 class SearchScreen extends StatefulWidget {
-  SearchScreen({Key? key}) : super(key: key);
+  const SearchScreen({Key? key}) : super(key: key);
 
   @override
   State<SearchScreen> createState() => _SearchScreenState();
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  DateTime _selectedDate = DateTime.now();
+  DateTime? _selectedDate;
 
   final TextEditingController textEditingController = TextEditingController();
 
@@ -26,7 +31,6 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -35,9 +39,16 @@ class _SearchScreenState extends State<SearchScreen> {
             children: [
               TextFormField(
                 keyboardType: TextInputType.emailAddress,
+                cursorColor: kTorqueiseBackgroundColor,
                 decoration: InputDecoration(
                   fillColor: Colors.white,
                   filled: true,
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: kTorqueiseBackgroundColor),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: kTorqueiseBackgroundColor),
+                  ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -45,12 +56,18 @@ class _SearchScreenState extends State<SearchScreen> {
                     fontSize: 20,
                   ),
                   hintText: 'Search Tutor here',
-                  prefixIcon: const Icon(Icons.search),
+                  prefixIcon: Icon(
+                    Icons.search,
+                    color: kTorqueiseBackgroundColor,
+                  ),
                   suffixIcon: IconButton(
                     onPressed: () {
                       _showFilter(context);
                     },
-                    icon: const FaIcon(FontAwesomeIcons.filter),
+                    icon: FaIcon(
+                      FontAwesomeIcons.filter,
+                      color: kTorqueiseBackgroundColor,
+                    ),
                   ),
                 ),
                 onFieldSubmitted: (value) {
@@ -62,12 +79,36 @@ class _SearchScreenState extends State<SearchScreen> {
                 child: Consumer<TutorProvider>(
                   builder: (context, tutorsList, child) {
                     List<Tutor> tutors = tutorsList.tutors;
-
+                    if (tutors.isEmpty) {
+                      return SingleChildScrollView(
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 60),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              SvgPicture.asset(
+                                'assets/images/illustration/undraw_searching_re_3ra9.svg',
+                                height: 250,
+                              ),
+                              const Padding(
+                                padding: EdgeInsets.only(bottom: 32),
+                                child: Text(
+                                  'Not Available',
+                                  textAlign: TextAlign.start,
+                                  style: TextStyle(fontSize: 18),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    }
                     return ListView.builder(
                       itemCount: tutors.length,
                       itemBuilder: (context, index) {
                         return ChangeNotifierProvider.value(
-                            value: tutors[index], child: TutorCard());
+                            value: tutors[index], child: const TutorCard());
                       },
                     );
                   },
@@ -80,7 +121,11 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  _showFilter(BuildContext context) {
+  List<Category> _pickedItems = [];
+
+  _showFilter(BuildContext context) async {
+    await Provider.of<CategoryProvider>(context, listen: false)
+        .getCategoryList();
     showModalBottomSheet(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.0),
@@ -96,9 +141,32 @@ class _SearchScreenState extends State<SearchScreen> {
                 Expanded(
                   child: Column(
                     children: [
-                      Text(
-                        'Filter',
-                        style: kTitleBoldTextStyle.copyWith(fontSize: 38),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Filter',
+                            style: kTitleBoldTextStyle.copyWith(fontSize: 38),
+                          ),
+                          IconButton(
+                            onPressed: () async {
+                              var category = Provider.of<CategoryProvider>(
+                                  context,
+                                  listen: false);
+                              category.emptyCategoryList();
+                              await category.getCategoryList();
+
+                              setState(() {
+                                _currentPriceRange =
+                                    const RangeValues(0, 500000);
+                                _selectedDate = null;
+                                _pickedItems = [];
+                              });
+                            },
+                            icon: const Icon(Icons.restore_outlined),
+                            color: kOrangeBackgroundColor,
+                          )
+                        ],
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -149,13 +217,20 @@ class _SearchScreenState extends State<SearchScreen> {
                           ),
                           Row(
                             children: [
-                              Text(
-                                DateFormat("EEEE, d MMMM y")
-                                    .format(_selectedDate)
-                                    .toString(),
-                                style:
-                                    kTitleBoldTextStyle.copyWith(fontSize: 18),
-                              ),
+                              _selectedDate == null
+                                  ? Text(
+                                      'Select your prefered date',
+                                      style: kTitleBoldTextStyle.copyWith(
+                                        fontSize: 18,
+                                      ),
+                                    )
+                                  : Text(
+                                      DateFormat("EEEE, d MMMM y")
+                                          .format(_selectedDate!)
+                                          .toString(),
+                                      style: kTitleBoldTextStyle.copyWith(
+                                          fontSize: 18),
+                                    ),
                               const SizedBox(
                                 width: 8,
                               ),
@@ -172,18 +247,49 @@ class _SearchScreenState extends State<SearchScreen> {
                           )
                         ],
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Category",
-                            style: kTitleBoldTextStyle,
-                          ),
-                        ],
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "Category",
+                          style: kTitleBoldTextStyle,
+                        ),
                       ),
-                      Row(
-                        children: const [],
-                      ),
+                      Expanded(
+                        child: Consumer<CategoryProvider>(
+                          builder: (context, category, child) {
+                            List<Category> categoryList = category.categoryList;
+                            if (categoryList.isEmpty) {
+                              return const Center(
+                                  child: CircularProgressIndicator());
+                            }
+                            return ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: categoryList.length,
+                              itemBuilder: (context, index) {
+                                Category category = categoryList[index];
+                                Category? pickedItem =
+                                    _pickedItems.firstWhereOrNull(
+                                        (element) => element.id == category.id);
+                                return CategoryItem(
+                                  category: category,
+                                  isSelected: pickedItem != null ? true : false,
+                                  onSelected: (value) {
+                                    if (value) {
+                                      //add to the list
+                                      _pickedItems.add(categoryList[index]);
+                                    } else {
+                                      _pickedItems.removeWhere((element) =>
+                                          element.id == categoryList[index].id);
+                                    }
+
+                                    setState(() {});
+                                  },
+                                );
+                              },
+                            );
+                          },
+                        ),
+                      )
                     ],
                   ),
                 ),
@@ -212,11 +318,22 @@ class _SearchScreenState extends State<SearchScreen> {
 
   _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: _selectedDate, // Refer step 1
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2025),
-    );
+        context: context,
+        initialDate: _selectedDate ?? DateTime.now(),
+        firstDate: DateTime.now(),
+        lastDate: DateTime(2100),
+        builder: (context, child) {
+          return Theme(
+            data: Theme.of(context).copyWith(
+              colorScheme: ColorScheme.light(
+                primary: kOrangeBackgroundColor, // header background color
+                onPrimary: Colors.white, // header text color
+                onSurface: Colors.black, // body text color
+              ),
+            ),
+            child: child!,
+          );
+        });
     if (picked != null && picked != _selectedDate) {
       _selectedDate = picked;
       setState(() {});
@@ -227,17 +344,76 @@ class _SearchScreenState extends State<SearchScreen> {
     BuildContext context,
     String value,
   ) async {
+    String categories = "";
+    for (var element in _pickedItems) {
+      categories += '${element.id.toString()},';
+    }
+
     Map<String, dynamic>? filters = {
       "minPrice": _currentPriceRange.start.toString(),
       "maxPrice": _currentPriceRange.end.toString(),
-      "date": "",
-      "category": ""
+      "date":
+          _selectedDate == null ? "" : _selectedDate.toString().split(" ")[0],
+      "category": categories
     };
-    // context.loaderOverlay.show();
-    await Provider.of<TutorProvider>(context, listen: false)
-        .searchTutors(keyword: value, filters: filters);
-    // context.loaderOverlay.hide();
+    context.loaderOverlay.show();
+    var tutorProvider = Provider.of<TutorProvider>(context, listen: false);
+    await tutorProvider.searchTutors(keyword: value, filters: filters);
+    if (tutorProvider.tutors.isEmpty) {
+      Toast.show("Tutors aren't available now, try again later",
+          duration: Toast.lengthLong, gravity: Toast.bottom);
+    }
+
+    context.loaderOverlay.hide();
 
     // Navigator.of(context).pop();
+  }
+}
+
+class CategoryItem extends StatefulWidget {
+  const CategoryItem(
+      {Key? key,
+      required this.category,
+      required this.onSelected,
+      this.isSelected})
+      : super(key: key);
+
+  final Category category;
+  final ValueChanged<bool> onSelected;
+  final bool? isSelected;
+  @override
+  State<CategoryItem> createState() => _CategoryItemState();
+}
+
+class _CategoryItemState extends State<CategoryItem> {
+  bool _isSelected = false;
+
+  @override
+  void initState() {
+    _isSelected = widget.isSelected ?? false;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _isSelected = !_isSelected;
+          widget.onSelected(_isSelected);
+        });
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Chip(
+          label: Text(
+            widget.category.name!,
+            style: TextStyle(color: _isSelected ? Colors.white : Colors.black),
+          ),
+          backgroundColor:
+              _isSelected ? kOrangeBackgroundColor : Colors.grey[300],
+        ),
+      ),
+    );
   }
 }

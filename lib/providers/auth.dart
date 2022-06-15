@@ -57,6 +57,9 @@ class AuthProvider with ChangeNotifier {
       'email': user.email,
       'name': user.displayName!,
     };
+    if (user.photoUrl != null) {
+      body['picture'] = user.photoUrl!;
+    }
 
     final response = await http
         .post(url, body: body, headers: {'Accept': 'application/json'});
@@ -66,7 +69,6 @@ class AuthProvider with ChangeNotifier {
       _status = Status.Authenticated;
       _token = response.headers['api_token']!;
       _user = User.fromJson(apiResponse);
-      print(_token);
       await storeUserData(apiResponse, _token);
       notifyListeners();
       Toast.show("Login Successfull",
@@ -91,6 +93,8 @@ class AuthProvider with ChangeNotifier {
       'phone_number': phoneNumber ?? ""
     };
 
+    print(body);
+
     final response = await http.put(
       url,
       body: body,
@@ -99,7 +103,6 @@ class AuthProvider with ChangeNotifier {
         'Accept': 'application/json'
       },
     );
-    print(response.statusCode);
     if (response.statusCode == 200) {
       Map<String, dynamic> apiResponse = json.decode(response.body)['data'];
       _user = User.fromJson(apiResponse);
@@ -130,10 +133,8 @@ class AuthProvider with ChangeNotifier {
   Future<User?> getUser() async {
     SharedPreferences storage = await SharedPreferences.getInstance();
     final userData = storage.getString('user');
-    print(userData);
     if (userData != null) {
       Map<String, dynamic> userMap = json.decode(userData);
-      print('map' + userMap.toString());
       return User.fromJson(userMap);
     }
     return null;

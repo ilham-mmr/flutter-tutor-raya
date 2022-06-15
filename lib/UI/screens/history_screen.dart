@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:provider/provider.dart';
@@ -58,7 +59,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                           child: CircleAvatar(
                             radius: 30,
                             backgroundImage: user?.picture != null
-                                ? NetworkImage("$API_STORAGE${user?.picture!}")
+                                ? NetworkImage("${user?.picture!}")
                                 : const AssetImage(
                                         "assets/images/blank-profile.png")
                                     as ImageProvider,
@@ -100,12 +101,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                           .toList(),
                                     );
                                   }
-                                  return const Center(
-                                    child: Text(
-                                      'No Lessons',
-                                      textAlign: TextAlign.start,
-                                      style: TextStyle(fontSize: 18),
-                                    ),
+                                  return SvgPicture.asset(
+                                    'assets/images/illustration/undraw_diary_re_4jpc.svg',
                                   );
                                 }
                                 return const Center(

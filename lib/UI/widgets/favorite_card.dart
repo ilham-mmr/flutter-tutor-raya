@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 import 'package:toast/toast.dart';
+import 'package:tutor_raya_mobile/UI/screens/detail_screen.dart';
 import 'package:tutor_raya_mobile/models/tutor.dart';
 import 'package:tutor_raya_mobile/providers/auth.dart';
 import 'package:tutor_raya_mobile/providers/tutor.dart';
@@ -27,7 +29,6 @@ class _FavoritedCardState extends State<FavoritedCard> {
 
   @override
   Widget build(BuildContext context) {
-    var currentUser = Provider.of<AuthProvider>(context, listen: false);
     var tutorProvider = Provider.of<TutorProvider>(context, listen: false);
     var tutor = Provider.of<Tutor>(context, listen: false);
     return Dismissible(
@@ -59,13 +60,20 @@ class _FavoritedCardState extends State<FavoritedCard> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(35.0),
                           ),
-                          child: SizedBox(
-                            width: 35,
-                            height: 35,
-                            child: Icon(
-                              Icons.favorite,
-                              color: Colors.red,
-                              size: 19,
+                          child: GestureDetector(
+                            onTap: () {
+                              Toast.show("Slide the card away to remove",
+                                  duration: Toast.lengthLong,
+                                  gravity: Toast.bottom);
+                            },
+                            child: const SizedBox(
+                              width: 35,
+                              height: 35,
+                              child: Icon(
+                                Icons.favorite,
+                                color: Colors.red,
+                                size: 19,
+                              ),
                             ),
                           ),
                         ),
@@ -98,12 +106,21 @@ class _FavoritedCardState extends State<FavoritedCard> {
                             .toList(),
                       ),
                       ElevatedButton.icon(
-                        onPressed: () {},
-                        icon: FaIcon(FontAwesomeIcons.shoppingBasket),
-                        label: Text("Book a lesson"),
+                        onPressed: () {
+                          pushNewScreen(
+                            context,
+                            screen: DetailScreen(tutorId: tutor.id!),
+                            withNavBar:
+                                true, // OPTIONAL VALUE. True by default.
+                            pageTransitionAnimation:
+                                PageTransitionAnimation.cupertino,
+                          );
+                        },
+                        icon: const FaIcon(FontAwesomeIcons.shoppingBasket),
+                        label: const Text("Book a lesson"),
                         style: ElevatedButton.styleFrom(
                           primary: kOrangeBackgroundColor,
-                          textStyle: TextStyle(fontSize: 15),
+                          textStyle: const TextStyle(fontSize: 15),
                         ),
                       ),
                     ],

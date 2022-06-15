@@ -1,8 +1,13 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:loader_overlay/loader_overlay.dart';
+import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
+import 'package:tutor_raya_mobile/UI/screens/search_screen.dart';
+import 'package:tutor_raya_mobile/UI/screens/search_screen_all.dart';
+import 'package:tutor_raya_mobile/UI/screens/search_screen_category.dart';
 import 'package:tutor_raya_mobile/UI/widgets/category_card.dart';
 import 'package:tutor_raya_mobile/UI/widgets/tutor_card.dart';
 import 'package:tutor_raya_mobile/models/category.dart';
@@ -75,8 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               child: CircleAvatar(
                                 radius: 30,
                                 backgroundImage: user?.picture != null
-                                    ? NetworkImage(
-                                        "$API_STORAGE${user?.picture!}")
+                                    ? NetworkImage("${user?.picture!}")
                                     : AssetImage(
                                             "assets/images/blank-profile.png")
                                         as ImageProvider,
@@ -89,20 +93,32 @@ class _HomeScreenState extends State<HomeScreen> {
                       SizedBox(
                         height: 30,
                       ),
-                      TextFormField(
-                        enabled: false,
-                        keyboardType: TextInputType.emailAddress,
-                        decoration: InputDecoration(
-                          fillColor: Colors.white,
-                          filled: true,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
+                      GestureDetector(
+                        onTap: () {
+                          pushNewScreen(
+                            context,
+                            screen: SearchScreen(),
+                            withNavBar:
+                                true, // OPTIONAL VALUE. True by default.
+                            pageTransitionAnimation:
+                                PageTransitionAnimation.slideUp,
+                          );
+                        },
+                        child: TextFormField(
+                          enabled: false,
+                          keyboardType: TextInputType.emailAddress,
+                          decoration: InputDecoration(
+                            fillColor: Colors.white,
+                            filled: true,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            labelStyle: TextStyle(
+                              fontSize: 20,
+                            ),
+                            hintText: 'Search Tutor here',
+                            prefixIcon: Icon(Icons.search),
                           ),
-                          labelStyle: TextStyle(
-                            fontSize: 20,
-                          ),
-                          hintText: 'Search Tutor here',
-                          prefixIcon: Icon(Icons.search),
                         ),
                       ),
                       SizedBox(
@@ -129,8 +145,26 @@ class _HomeScreenState extends State<HomeScreen> {
                                       shrinkWrap: true,
                                       padding: const EdgeInsets.all(8),
                                       children: data
-                                          .map<Widget>((category) =>
-                                              CategoryCard(category: category))
+                                          .map<Widget>(
+                                              (category) => CategoryCard(
+                                                    category: category,
+                                                    tappable: true,
+                                                    onTap: () {
+                                                      pushNewScreen(
+                                                        context,
+                                                        screen:
+                                                            SearchScreenCategory(
+                                                                keyword: category
+                                                                    .id
+                                                                    .toString()),
+                                                        withNavBar:
+                                                            true, // OPTIONAL VALUE. True by default.
+                                                        pageTransitionAnimation:
+                                                            PageTransitionAnimation
+                                                                .slideUp,
+                                                      );
+                                                    },
+                                                  ))
                                           .toList(),
                                     );
                                   }
@@ -153,9 +187,14 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              final user = Provider.of<TutorProvider>(context,
-                                      listen: false)
-                                  .getTutors(5);
+                              pushNewScreen(
+                                context,
+                                screen: SearchScreenAll(),
+                                withNavBar:
+                                    true, // OPTIONAL VALUE. True by default.
+                                pageTransitionAnimation:
+                                    PageTransitionAnimation.slideUp,
+                              );
                             },
                             child: Text(
                               'See All',
@@ -175,32 +214,35 @@ class _HomeScreenState extends State<HomeScreen> {
                               builder: (context, snapshot) {
                                 if (snapshot.hasData) {
                                   var data = snapshot.data as List<Tutor>;
+                                  print(data);
                                   if (data.isNotEmpty) {
                                     return ListView(
                                       scrollDirection: Axis.horizontal,
                                       shrinkWrap: true,
                                       padding: const EdgeInsets.all(8),
-                                      children:
-
-                                          //  data
-                                          //     .map<Widget>((tutor) =>
-                                          //         TutorCard(tutor: tutor))
-                                          //     .toList(),
-                                          data
-                                              .map<Widget>((tutor) =>
-                                                  ChangeNotifierProvider<
-                                                          Tutor>.value(
-                                                      value: tutor,
-                                                      child: TutorCard()))
-                                              .toList(),
+                                      children: data
+                                          .map<Widget>((tutor) =>
+                                              ChangeNotifierProvider<
+                                                      Tutor>.value(
+                                                  value: tutor,
+                                                  child: TutorCard()))
+                                          .toList(),
                                     );
                                   }
-                                  return Center(
-                                    child: Text(
-                                      'No Available Tutors At the moment',
-                                      textAlign: TextAlign.start,
-                                      style: TextStyle(fontSize: 18),
-                                    ),
+                                  return Column(
+                                    children: [
+                                      SvgPicture.asset(
+                                        'assets/images/illustration/undraw_my_universe_803e.svg',
+                                        height: 150,
+                                      ),
+                                      Center(
+                                        child: Text(
+                                          'No Available Tutors At the moment',
+                                          textAlign: TextAlign.start,
+                                          style: TextStyle(fontSize: 18),
+                                        ),
+                                      ),
+                                    ],
                                   );
                                 }
                                 return Center(

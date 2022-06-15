@@ -40,6 +40,8 @@ class TutorService {
       }
     });
 
+    print(url);
+
     final response = await http.get(
       Uri.parse(url),
       headers: {
@@ -48,12 +50,11 @@ class TutorService {
       },
     );
 
-    // print(response.body);
-
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
       List<Tutor> tutors =
           data.map<Tutor>((item) => Tutor.fromJson(item)).toList();
+      print(tutors);
 
       return tutors;
     }

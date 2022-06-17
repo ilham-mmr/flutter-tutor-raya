@@ -26,21 +26,11 @@ class TutorService {
       url += 'keyword=$keyword&';
     }
 
-    // // convert filters to data map
-    // var dataFilters = {
-    //   "minPrice": filters?["minPrice"] ?? "",
-    //   "maxPrice": filters?["minPrice"] ?? "",
-    //   "date": filters?["date"].toString() ?? "",
-    //   "category": filters?["category"].toString() ?? ""
-    // };
-
     filters?.forEach((key, value) {
       if (value != "") {
         url += '$key=$value&';
       }
     });
-
-    print(url);
 
     final response = await http.get(
       Uri.parse(url),
@@ -54,7 +44,6 @@ class TutorService {
       var data = jsonDecode(response.body);
       List<Tutor> tutors =
           data.map<Tutor>((item) => Tutor.fromJson(item)).toList();
-      print(tutors);
 
       return tutors;
     }
@@ -119,22 +108,13 @@ class TutorService {
 
     if (response.statusCode == 200) {
       Map<String, dynamic> data = jsonDecode(response.body);
-      // print(data);
-      // var tutoringsData = data["tutorings"];
-      // tutoringsData.forEach((element) {
-      //   print(element["title"]);
-      // });
+
       Tutor tutor = Tutor.fromJson(data);
       var tutorings = data["tutorings"]
           .map<Tutoring>((item) => Tutoring.fromJson(item))
           .toList();
-      // print(tutorings);
       tutor.tutorings = tutorings;
 
-      // print(tutoringsData);
-      // tutoringsData.forEach((element) {
-      //   print(element);
-      // });
       return tutor;
     }
     return Future.error('No data');

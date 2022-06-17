@@ -132,7 +132,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   style: TextStyle(fontSize: 18),
                                 ),
                               ),
-
                               Text(
                                 user.email!,
                                 style: const TextStyle(
@@ -142,12 +141,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   onPressed: () {
                                     setState(() {
                                       if (isEditing) {
-                                        // print(about);
-                                        // print(phoneNumber);
-                                        // print(education);
-                                        print(_aboutController.text);
-                                        print(_educationController.text);
-                                        print(_phoneController.text);
                                         updateUserInfo(context);
                                       }
                                       isEditing = !isEditing;
@@ -162,7 +155,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           FontAwesomeIcons.pencilAlt,
                                           color: kTorqueiseBackgroundColor,
                                         )),
-
                               const Padding(
                                 padding: EdgeInsets.only(
                                   top: 8,
@@ -173,7 +165,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   style: TextStyle(fontSize: 18),
                                 ),
                               ),
-
                               isEditing
                                   ? TextFormField(
                                       keyboardType: TextInputType.text,
@@ -277,58 +268,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       style: const TextStyle(
                                           fontSize: 18, color: Colors.grey),
                                     ),
-
-                              // ),
-                              // isEditing
-                              //     ? TextField(
-                              //         controller: _aboutController,
-                              //         onChanged: (text) => {about = text},
-                              //       )
-                              //     : Text(
-                              //         user.about ?? "-",
-                              //         style: const TextStyle(
-                              //             fontSize: 18, color: Colors.grey),
-                              //       ),
-                              // const SizedBox(
-                              //   height: 20,
-                              // ),
-                              // const Text(
-                              //   'Education',
-                              //   style: TextStyle(fontSize: 18),
-                              // ),
-                              // isEditing
-                              //     ? TextField(
-                              //         controller: _educationController,
-                              //         onChanged: (text) => {education = text},
-                              //       )
-                              //     : Text(
-                              //         user.education ?? "-",
-                              //         style: const TextStyle(
-                              //             fontSize: 18, color: Colors.grey),
-                              //       ),
-                              // const SizedBox(
-                              //   height: 20,
-                              // ),
-                              // const Text(
-                              //   'Phone Number',
-                              //   style: TextStyle(fontSize: 18),
-                              // ),
-                              // isEditing
-                              //     ? TextField(
-                              //         controller: _phoneController,
-                              //         onChanged: (val) {
-                              //           print(val);
-                              //         },
-                              //         inputFormatters: [
-                              //           FilteringTextInputFormatter.digitsOnly
-                              //         ],
-                              //         keyboardType: TextInputType.number,
-                              //       )
-                              //     : Text(
-                              //         user.phoneNumber ?? "-",
-                              //         style: const TextStyle(
-                              //             fontSize: 18, color: Colors.grey),
-                              //       ),
                               TextButton(
                                 style: TextButton.styleFrom(
                                   textStyle: const TextStyle(fontSize: 20),

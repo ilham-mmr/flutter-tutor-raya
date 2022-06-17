@@ -39,7 +39,7 @@ class _SearchScreenAllState extends State<SearchScreenAll> {
                   Navigator.of(context).pop();
                   pushNewScreen(
                     context,
-                    screen: SearchScreen(),
+                    screen: const SearchScreen(),
                     withNavBar: true, // OPTIONAL VALUE. True by default.
                     pageTransitionAnimation: PageTransitionAnimation.slideUp,
                   );

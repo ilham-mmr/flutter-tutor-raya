@@ -2,11 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:tutor_raya_mobile/UI/screens/login_screen.dart';
-import 'package:tutor_raya_mobile/UI/screens/main_screen.dart';
-import 'package:tutor_raya_mobile/UI/screens/testing_screen.dart';
 import 'package:tutor_raya_mobile/providers/auth.dart';
-import 'package:tutor_raya_mobile/services/google_signin_api.dart';
-import 'package:tutor_raya_mobile/styles/color_constants.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tutor_raya_mobile/styles/style_constants.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
@@ -22,7 +18,6 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: kBasicBackgroundColor,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -77,12 +72,6 @@ class _SplashScreenState extends State<SplashScreen> {
                           pageTransitionAnimation:
                               PageTransitionAnimation.slideUp,
                         );
-
-                        // Navigator.pushReplacement(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (BuildContext context) =>
-                        //             const LoginScreen()));
                       },
                       label: const Text(
                         'Explore Now',
@@ -104,12 +93,6 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future signIn() async {
-    bool isLoggedIn =
-        await Provider.of<AuthProvider>(context, listen: false).login();
-    String message = "Login Failed";
-    if (isLoggedIn) {
-      message = "Login Successful";
-    }
-    print(message);
+    await Provider.of<AuthProvider>(context, listen: false).login();
   }
 }

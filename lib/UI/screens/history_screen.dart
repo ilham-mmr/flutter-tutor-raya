@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:provider/provider.dart';
 import 'package:tutor_raya_mobile/UI/widgets/lesson_card.dart';
@@ -9,7 +8,6 @@ import 'package:tutor_raya_mobile/providers/auth.dart';
 import 'package:tutor_raya_mobile/providers/tutoring.dart';
 import 'package:tutor_raya_mobile/styles/color_constants.dart';
 import 'package:tutor_raya_mobile/styles/style_constants.dart';
-import 'package:tutor_raya_mobile/utils/constants.dart';
 
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({Key? key}) : super(key: key);
@@ -30,7 +28,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
         child: RefreshIndicator(
           onRefresh: () async {
             context.loaderOverlay.show();
-            await Future.delayed(Duration(seconds: 3));
+            await Future.delayed(const Duration(seconds: 3));
             context.loaderOverlay.hide();
 
             setState(() {});

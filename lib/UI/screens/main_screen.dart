@@ -58,11 +58,11 @@ class MainScreen extends StatelessWidget {
 
   List<Widget> _buildScreens() {
     return [
-      HomeScreen(),
-      FavoritedScreen(),
-      SearchScreen(),
-      HistoryScreen(),
-      ProfileScreen(),
+      const HomeScreen(),
+      const FavoritedScreen(),
+      const SearchScreen(),
+      const HistoryScreen(),
+      const ProfileScreen(),
     ];
   }
 

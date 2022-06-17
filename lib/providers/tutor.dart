@@ -26,11 +26,7 @@ class TutorProvider with ChangeNotifier {
   getTutors([int? limit]) async {
     var data = await tutorService.getTutors(limit: limit);
     var favoriteData = await tutorService.getUserFavoriteTutors();
-    // final List<Tutor> loadedProducts = [];
     for (var tutor in data) {
-      // if (favoriteData['${tutor.id}']['is_favorite'] == 1) {
-      //   print('favoriteData');
-      // }
       if (favoriteData != null) {
         tutor.isFavorite = favoriteData['${tutor.id}'] == null
             ? false
@@ -45,20 +41,9 @@ class TutorProvider with ChangeNotifier {
   getFavoriteTutors() async {
     var favoriteTutors =
         await tutorService.getUserFavoriteTutors(withDetails: true);
-    // print(favoriteTutors);
-    // var favoriteData = await tutorService.getUserFavoriteTutors();
-    // print(favoriteTutors.cast<String, dynamic>());
-    // TODO: FIX THIS BUG
+
     List<Tutor> tutors =
         favoriteTutors.map<Tutor>((item) => Tutor.fromJson(item)).toList();
-
-    // for (var tutor in tutors) {
-    //   tutor.isFavorite = favoriteData['${tutor.id}'] == null
-    //       ? false
-    //       : favoriteData['${tutor.id}']['is_favorite'] == 1
-    //           ? true
-    //           : false;
-    // }
 
     _favoriteTutors = tutors;
     notifyListeners();
@@ -77,7 +62,6 @@ class TutorProvider with ChangeNotifier {
     var filteredFavoriteTutors =
         _favoriteTutors.where((element) => !(element.id == tutor.id)).toList();
     _favoriteTutors = filteredFavoriteTutors;
-    print(_favoriteTutors);
 
     notifyListeners();
   }
@@ -92,9 +76,6 @@ class TutorProvider with ChangeNotifier {
     var favoriteData = await tutorService.getUserFavoriteTutors();
 
     for (var tutor in data) {
-      // if (favoriteData['${tutor.id}']['is_favorite'] == 1) {
-      //   print('favoriteData');
-      // }
       if (favoriteData != null) {
         tutor.isFavorite = favoriteData['${tutor.id}'] == null
             ? false
@@ -111,10 +92,6 @@ class TutorProvider with ChangeNotifier {
         await tutorService.getTutors(keyword: keyword ?? "", filters: filters);
     var favoriteData = await tutorService.getUserFavoriteTutors();
     for (var tutor in data) {
-      // if (favoriteData['${tutor.id}']['is_favorite'] == 1) {
-      //   addFavoriteTutor(tutor);
-      // }
-
       if (favoriteData != null) {
         tutor.isFavorite = favoriteData['${tutor.id}'] == null
             ? false
@@ -132,17 +109,4 @@ class TutorProvider with ChangeNotifier {
     var data = await tutorService.getTutorDetail(id);
     return data;
   }
-
-  /*
-   whenever wa want to get data from the search and home screen for tutor cards.
-   we check against the retrieved data and favoritedData['id']
-   if it's null then make it false, if it's favorited then make it true
-   
-   */
-
-  // toggleFavorite(int userId, tutorId) {
-  // call tutorService.togglefavorite(userId, tutorId);
-  // make product model have withchangenotifier
-  // add the relevant method?
-  // }
 }

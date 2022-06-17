@@ -92,29 +92,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       style: kTorqueiseElevatedButtonSytle,
                     ),
                   ),
-                  // Padding(
-                  //   padding: const EdgeInsets.all(8.0),
-                  //   child: ElevatedButton.icon(
-                  //     onPressed: () {
-                  //       Navigator.of(context)
-                  //           .pushReplacementNamed('/main-screen');
-                  //     },
-                  //     label: const Padding(
-                  //       padding: EdgeInsets.all(8.0),
-                  //       child: Text(
-                  //         'Log In with Facebook',
-                  //         style: TextStyle(fontSize: 20),
-                  //       ),
-                  //     ),
-                  //     icon: const Padding(
-                  //       padding: EdgeInsets.all(8.0),
-                  //       child: FaIcon(
-                  //         FontAwesomeIcons.facebook,
-                  //       ),
-                  //     ),
-                  //     style: kTorqueiseElevatedButtonSytle,
-                  //   ),
-                  // ),
                 ],
               )
             ],
@@ -127,9 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Future signIn() async {
     bool isLoggedIn =
         await Provider.of<AuthProvider>(context, listen: false).login();
-    String message = "Login Failed";
     if (isLoggedIn) {
-      message = "Login Successful";
       Navigator.of(context).popUntil(ModalRoute.withName("/"));
     }
   }

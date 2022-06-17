@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -9,8 +11,6 @@ import 'dart:convert';
 import 'package:tutor_raya_mobile/models/user.dart';
 import 'package:tutor_raya_mobile/services/google_signin_api.dart';
 import 'package:tutor_raya_mobile/utils/constants.dart';
-
-// import 'package:flutter_todo/widgets/notification_text.dart';
 
 enum Status { Uninitialized, Authenticated, Authenticating, Unauthenticated }
 
@@ -93,8 +93,6 @@ class AuthProvider with ChangeNotifier {
       'phone_number': phoneNumber ?? ""
     };
 
-    print(body);
-
     final response = await http.put(
       url,
       body: body,
@@ -149,7 +147,6 @@ class AuthProvider with ChangeNotifier {
         'Accept': 'application/json'
       },
     );
-    print(response.body);
     if (response.statusCode != 200) {
       Toast.show("Logout Failed",
           duration: Toast.lengthLong, gravity: Toast.bottom);

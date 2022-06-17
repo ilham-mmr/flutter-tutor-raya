@@ -38,14 +38,14 @@ class ResultCard extends StatelessWidget {
                       'David',
                       style: kTitleBoldTextStyle,
                     ),
-                    Text('Technology Science'),
+                    const Text('Technology Science'),
                     ElevatedButton.icon(
                       onPressed: () {},
-                      icon: FaIcon(FontAwesomeIcons.shoppingBasket),
-                      label: Text("Book a lesson"),
+                      icon: const FaIcon(FontAwesomeIcons.shoppingBasket),
+                      label: const Text("Book a lesson"),
                       style: ElevatedButton.styleFrom(
                         primary: kOrangeBackgroundColor,
-                        textStyle: TextStyle(fontSize: 15),
+                        textStyle: const TextStyle(fontSize: 15),
                       ),
                     ),
                   ],

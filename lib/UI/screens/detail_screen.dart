@@ -127,19 +127,6 @@ class _DetailScreenState extends State<DetailScreen> {
                 ),
               ),
             ),
-            // InkWell(
-            //   onTap: () {},
-            //   child: const Padding(
-            //     padding: EdgeInsets.all(8.0),
-            //     child: CircleAvatar(
-            //       child: Icon(
-            //         Icons.favorite,
-            //         color: Colors.red,
-            //       ),
-            //       backgroundColor: Colors.white,
-            //     ),
-            //   ),
-            // ),
           ],
         ),
       ],

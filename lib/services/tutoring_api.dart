@@ -27,8 +27,6 @@ class TutoringService {
       "user_id": authProvider.user!.id.toString(),
     });
 
-    print(response.body);
-
     if (response.statusCode == 200) {
       return true;
     }
@@ -50,16 +48,11 @@ class TutoringService {
       },
     );
 
-    print(url);
-
-    print(response.body);
-
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
 
       var lessons =
           data["lessons"].map<Lesson>((item) => Lesson.fromJson(item)).toList();
-      print(lessons);
 
       return lessons;
     }

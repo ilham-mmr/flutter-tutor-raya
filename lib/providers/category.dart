@@ -33,18 +33,5 @@ class CategoryProvider with ChangeNotifier {
   getCategories() async {
     var data = await categoryService.getCategories();
     return data;
-    // var url = Uri.parse('https://luxfortis.studio/app/subjects/subjects.php');
-    // var response = await http.get(url);
-    // if (response.statusCode == 200) {
-    //   var data = jsonDecode(response.body);
-    //   data = data['subjects'];
-
-    //   List<Subject> subjects =
-    //       data.map<Subject>((item) => Subject.fromJson(item)).toList();
-    //   // subjects.forEach((e) => print(e.image));
-    //   return subjects;
-    // } else {
-    //   return <Subject>[];
-    // }
   }
 }

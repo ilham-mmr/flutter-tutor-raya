@@ -217,7 +217,7 @@ class _SearchScreenCategoryState extends State<SearchScreenCategory> {
                           Row(
                             children: [
                               _selectedDate == null
-                                  ? Text('data')
+                                  ? const Text('data')
                                   : Text(
                                       DateFormat("EEEE, d MMMM y")
                                           .format(_selectedDate!)

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tutor_raya_mobile/UI/widgets/favorite_card.dart';
 import 'package:tutor_raya_mobile/models/tutor.dart';
@@ -8,7 +7,6 @@ import 'package:tutor_raya_mobile/providers/auth.dart';
 import 'package:tutor_raya_mobile/providers/tutor.dart';
 import 'package:tutor_raya_mobile/styles/color_constants.dart';
 import 'package:tutor_raya_mobile/styles/style_constants.dart';
-import 'package:tutor_raya_mobile/utils/constants.dart';
 
 class FavoritedScreen extends StatefulWidget {
   const FavoritedScreen({Key? key}) : super(key: key);
@@ -18,18 +16,6 @@ class FavoritedScreen extends StatefulWidget {
 }
 
 class _FavoritedScreenState extends State<FavoritedScreen> {
-  // TutorProvider? tutor;
-  @override
-  void initState() {
-    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-    //   tutor = Provider.of<TutorProvider>(context, listen: false);
-    // });
-    // if (tutor != null) {
-    //   tutor!.getFavoriteTutors();
-    // }
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -91,14 +77,7 @@ class _FavoritedScreenState extends State<FavoritedScreen> {
                       child: Consumer<TutorProvider>(
                         builder: (context, tutorsList, child) {
                           List<Tutor> tutors = tutorsList.favoriteTutors;
-                          // return FutureBuilder(
-                          //   future: tutorsList.getFavoriteTutors(),
-                          //   builder: (BuildContext context,
-                          //       AsyncSnapshot<dynamic> snapshot) {
 
-                          //   },
-
-                          // );
                           if (tutors.isEmpty) {
                             return Column(
                               mainAxisAlignment: MainAxisAlignment.center,

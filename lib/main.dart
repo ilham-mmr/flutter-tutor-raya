@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:toast/toast.dart';
 import 'package:tutor_raya_mobile/UI/screens/main_screen.dart';
 import 'package:tutor_raya_mobile/UI/screens/splash_screen.dart';
+import 'package:tutor_raya_mobile/UI/widgets/loading.dart';
 import 'package:tutor_raya_mobile/models/tutor.dart';
 import 'package:tutor_raya_mobile/providers/auth.dart';
 import 'package:tutor_raya_mobile/providers/category.dart';
@@ -27,7 +28,6 @@ void main() {
             textTheme: GoogleFonts.latoTextTheme(),
             backgroundColor: kBasicBackgroundColor,
           ),
-          // onGenerateRoute: RouteGenerator.generateRoute,
           routes: {
             '/': (context) => const RouterAuth(),
           },
@@ -78,28 +78,6 @@ class RouterAuth extends StatelessWidget {
             return const Text('default');
         }
       },
-    );
-  }
-}
-
-class Loading extends StatelessWidget {
-  const Loading({Key? key}) : super(key: key);
-
-  initAuthProvider(context) async {
-    Provider.of<AuthProvider>(context, listen: false).initAuthProvider();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    initAuthProvider(context);
-
-    return const Scaffold(
-      body: Center(
-        child: Padding(
-          padding: EdgeInsets.fromLTRB(30.0, 0.0, 30.0, 0.0),
-          child: CircularProgressIndicator(),
-        ),
-      ),
     );
   }
 }

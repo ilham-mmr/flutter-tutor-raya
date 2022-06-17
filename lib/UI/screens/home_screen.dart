@@ -17,7 +17,6 @@ import 'package:tutor_raya_mobile/providers/category.dart';
 import 'package:tutor_raya_mobile/providers/tutor.dart';
 import 'package:tutor_raya_mobile/styles/color_constants.dart';
 import 'package:tutor_raya_mobile/styles/style_constants.dart';
-import 'package:tutor_raya_mobile/utils/constants.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -214,7 +213,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               builder: (context, snapshot) {
                                 if (snapshot.hasData) {
                                   var data = snapshot.data as List<Tutor>;
-                                  print(data);
                                   if (data.isNotEmpty) {
                                     return ListView(
                                       scrollDirection: Axis.horizontal,

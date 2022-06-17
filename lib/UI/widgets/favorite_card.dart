@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import 'package:toast/toast.dart';
 import 'package:tutor_raya_mobile/UI/screens/detail_screen.dart';
 import 'package:tutor_raya_mobile/models/tutor.dart';
-import 'package:tutor_raya_mobile/providers/auth.dart';
 import 'package:tutor_raya_mobile/providers/tutor.dart';
 import 'package:tutor_raya_mobile/styles/color_constants.dart';
 import 'package:tutor_raya_mobile/styles/style_constants.dart';
@@ -21,12 +20,6 @@ class FavoritedCard extends StatefulWidget {
 }
 
 class _FavoritedCardState extends State<FavoritedCard> {
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     var tutorProvider = Provider.of<TutorProvider>(context, listen: false);

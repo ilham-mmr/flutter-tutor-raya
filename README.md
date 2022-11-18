@@ -1,4 +1,7 @@
-# tutor_raya_mobile
+# PROJECT INFORMATION
+- a platform system that connects users with potential tutors.
+Tutor Raya consists of Laravel App (API&WEB) for tutors, while users use Flutter 
+- laravel code : [Click here!](https://github.com/ilham-mmr/tutor-raya)
 
 A new Flutter project.
 
